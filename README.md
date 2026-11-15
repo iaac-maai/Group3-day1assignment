@@ -1,137 +1,84 @@
 # Mumbai Rental Property Data Analysis
 
-**IAAC — AI Methods | Group 3**
+**IAAC MaAI — AI Methods I, Day 1 | Group 3**
 
-## Project Overview
+**Team:** Ahmed Belahcen, Nandini Rathod, Sanjana Kiran, Akanksha Dhumal.
 
-This project investigates rental property listings in Mumbai using Python, pandas, and data visualization techniques.
-
-Our objective is to develop a reproducible workflow combining data cleaning, exploratory data analysis (EDA), geographic comparisons, and data quality validation.
-
-The final analysis is consolidated into a single Jupyter notebook.
-
-## Team Members and Contributions
-
-- **Ahmed Belahcen:** Initial exploration, preliminary cleaning and analysis, final notebook consolidation, and integration.
-- **Nandini Rathod:** Data cleaning, refactoring, and dataset preparation.
-- **Sanjana Kiran:** Exploratory data analysis, statistical comparisons, and visualizations.
-- **Akanksha Dhumal:** Data validation, consistency checks, outlier analysis, and potential bias assessment.
-
-All members contributed to project development and GitHub collaboration.
+## Use case
+How do dwelling size, furnishing and neighbourhood relate to advertised rents in Mumbai? We compare housing types and investigate whether rent differences persist when expressed per reported area unit. This supports residential market exploration, not causal valuation or household affordability estimates.
 
 ## Dataset
+- Source: [Property Rental Listings Dataset](https://www.kaggle.com/datasets/harshalhonde/property-rental-listings-dataset), Harshal H (`harshalhonde`).
+- Raw file: `Mumbai_property_details.csv`, 23,405 rows and 18 columns. One row is an advertised listing, not necessarily a unique dwelling.
+- Data licence: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), as recorded in the team's [Day 2 provenance](https://huggingface.co/iaac-maai/group3-day2-mumbairental/blob/60dd192d80947c79fdae64bff6ce770d3db76b76/README.md). This correction did not independently reverify Kaggle's licence metadata.
+- Modifications: team precleaning, numeric parsing, analytical filtering, category standardization and rent-per-area features.
 
-**Source:** Property Rental Listings Dataset — Kaggle  
-**Author:** harshalhonde  
-**Original file:** `Mumbai_property_details.csv`
+The notebook downloads missing raw inputs and retrieves the historical precleaned input from fixed revision `ccbcf01c14ee3f0ed8273d6df5cbcd75e405e6a6`, checking its SHA-256. The original precleaning is represented by this input and its audit; it is **not regenerated from raw records**. Subsequent analysis is reproducible from that historical input. First-run downloads require internet access.
 
-- Original dataset: 23,405 records and 18 columns.
-- Final analytical dataset: 18,846 records.
-- Key variables: rental price, property area, BHK, bathrooms, balconies, furnishing, orientation, and location.
+## Files
+| Path | Purpose |
+|---|---|
+| `notebook/final_analysis.ipynb` | Main notebook with executed outputs |
+| `data/mumbai_rentals_cleaned.csv` | Single final analytical dataset, exported by the notebook |
+| `data/raw/` | Ignored downloaded inputs |
+| `figures/` | Exported PNG charts |
+| `reports/cleaning_audit.csv` | Historical audit, not another analytical dataset |
+| `requirements.txt` | Five direct dependencies, pinned and UTF-8 encoded |
+| `LICENSE` | MIT licence for code |
 
-The original dataset contains missing values, inconsistent attributes, and potentially anomalous property listings.
+## How to run
+Use Python 3.11. From the repository root:
 
-## Project Structure
-
-```text
-Group3-day1assignment/
-├── data/
-├── notebooks/
-│   └── final_analysis.ipynb
-├── README.md
-├── requirements.txt
-└── .gitignore
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m pip install ipykernel==6.28.0
 ```
 
-## Methodology
+On macOS/Linux activate with `source .venv/bin/activate`. Open `notebook/final_analysis.ipynb` in VS Code with the Jupyter extension, select `.venv`, restart the kernel and run all cells. The notebook supports execution from its folder or the repository root. It exports the final CSV and charts. `ipykernel` is installed separately as notebook tooling.
 
-### 1. Data Exploration and Cleaning
+## Data quality
+| Check | Treatment and limitation |
+|---|---|
+| Missing values and duplicates | Counts displayed before and after filtering; unknown balconies retained as missing |
+| Numeric fields | Explicit parsing; unusable or nonpositive rent/area excluded |
+| Configuration | BHK outside 1–5 and unusually large bathroom/balcony counts excluded under project-specific scope assumptions |
+| Area and rent outliers | Inspected and documented; unusual values are not automatically proof of errors |
+| Categories | Furnishing and orientation standardized before comparison |
+| Geographic coverage | Neighbourhoods inferred from titles; minimum sample counts used for grouped plots |
 
-The dataset was inspected for missing values, duplicates, inconsistent categories, and potentially invalid numerical records.
+Some intermediate cells explore alternative filtering rules before explicitly rebuilding the final sample. Use only the CSV exported at the end for later assignments.
 
-Cleaning decisions aimed to improve consistency while preserving plausible property listings, including high-value luxury properties.
+## Key findings
+- The original final analytical sample contains 18,846 listings versus 23,405 raw records; filtering narrows the housing market represented.
+- Median rent is INR 70,000/month (mean INR 111,498); the middle 50% ranges from INR 45,000 to INR 130,000.
+- Median rents rise from INR 35,000 for 1 BHK to INR 65,000 for 2 BHK and INR 130,000 for 3 BHK.
+- Spearman correlation between reported area and rent is 0.81; this is association, not a causal estimate.
+- Missing balcony and construction-year values limit analysis. Exact counts and numerical summaries appear in the notebook's final quality report.
+- Correlation describes association, not causation: building quality, micro-location and listing selection may confound results.
 
-Missing balcony information was retained as missing rather than automatically interpreted as zero.
+![Median monthly rent by BHK](figures/23_analysis.png)
 
-### 2. Exploratory Data Analysis
+![Neighbourhood comparison](figures/70_analysis.png)
 
-The analysis investigates relationships between rental prices and property characteristics, including:
+![Spearman correlations](figures/79_correlations.png)
 
-- Property area and monthly rent.
-- Bedroom count (BHK) and rental prices.
-- Furnishing status and rental values.
-- Property orientation and rent per reported area unit.
-- Geographic differences between Mumbai neighborhoods.
+## Limitations and modelling
+Listing dates, repeated listings, uncertain area units, title-based locations and omitted building attributes limit interpretation. This is not a representative market survey. Minimum group sizes do not establish statistical significance. The historical precleaning is not independently reproduced from raw records here.
 
-### 3. Neighborhood and Orientation Analysis
+A future target is `Price_num`. Exclude `Price`, `Rent_per_Area` and rent-derived flags or thresholds from model predictors to avoid leakage. Fit imputation and encoding on training data only.
 
-Neighborhoods were extracted from property listing titles.
+## AI usage disclosure
+| Question | Disclosure |
+|---|---|
+| Tools | ChatGPT/Codex as a coding agent for this correction |
+| Why | Address instructor feedback, repair reproducibility and document results |
+| Where | Dependencies, cell ordering, figures, statistics, correlation, CSV export and README |
+| How | The user supplied the issue. The agent inspected GitHub and an unfinished local correction, executed cells sequentially in a fresh Python process, and fixed an undefined furnishing-analysis variable caused by incorrect cell order. |
+| Lessons learned | Saved outputs can conceal execution-order errors. Run from a clean process, export files explicitly and distinguish historical precleaning from reproducible analysis. |
 
-The analysis compares median rental values across locations and examines orientation-related differences within neighborhoods.
+This describes the observed correction workflow. The team should add any tools used during the original assignment and review every decision and interpretation before submission.
 
-For greater comparability, the neighborhood-orientation analysis focuses on 2 BHK properties and uses median rent per reported area unit.
-
-### 4. Data Validation
-
-The final workflow includes:
-
-- Missing-value assessment.
-- Numerical consistency checks.
-- Review of cleaning decisions and potential anomalies.
-- Sample-size validation for neighborhood-orientation comparisons.
-- Documentation of analytical limitations.
-
-## Key Findings
-
-- Rental values differ substantially across Mumbai neighborhoods and property categories.
-- Lower Parel, Bandra, Khar, and Prabhadevi exhibit relatively high median rents in the analyzed sample.
-- Borivali, Kandivali, and Kurla show comparatively lower median rents.
-- Property size alone does not explain rental-price differences.
-- Orientation-related rental differences vary across neighborhoods.
-- In Andheri, several orientations show similar median rent-per-area values for 2 BHK properties.
-- In Bandra, West-facing 2 BHK properties show higher median rent per area than East-facing properties.
-- Some apparently large orientation-related differences are supported by relatively small samples and require cautious interpretation.
-
-These findings are descriptive and do not establish causal relationships.
-
-## Data Quality Summary
-
-The final analytical dataset contains **18,846 listings**.
-
-- Rental price, area, and BHK: no missing values in the final dataset.
-- Bathrooms: 15 missing values.
-- Balconies: 10,323 missing values (54.78%).
-- Year of construction: 5,229 missing values (27.75%).
-
-Missing data and sample coverage are considered when interpreting the results.
-
-## How to Run
-
-1. Clone the repository.
-2. Create and activate a Python virtual environment.
-3. Install the project dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-4. Make the required dataset available at the path expected by the notebook.
-5. Open `notebooks/final_analysis.ipynb` in VS Code or Jupyter.
-6. Select the appropriate Python environment and run the notebook from beginning to end.
-
-## Limitations
-
-- Neighborhood information was extracted from listing titles and may not be geographically precise.
-- The dataset may not represent the entire Mumbai rental market.
-- The measurement unit of property area requires verification.
-- Missing balcony and construction-year information limits certain comparisons.
-- Property quality, amenities, building age, and micro-location may influence observed rental differences.
-- Small sample sizes may affect the stability of some median estimates.
-- The analysis does not establish causal effects or current market trends.
-
-## Conclusion
-
-This project demonstrates a collaborative approach to rental-market data analysis, combining data preparation, visualization, geographic comparisons, and quality assessment.
-
-The consolidated notebook provides an exploratory foundation for future rental-price modeling and more advanced property valuation studies.
-
+## License
+Code: [MIT](LICENSE). Data: separately attributed to Harshal H under the provenance above; the code licence does not relicense the dataset.
