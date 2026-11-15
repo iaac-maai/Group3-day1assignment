@@ -82,3 +82,6 @@ This describes the observed correction workflow. The available record does not e
 
 ## License
 Code: [MIT](LICENSE). Data: separately attributed to Harshal H under the provenance above; the code licence does not relicense the dataset.
+
+## Reproducibility verification
+[GitHub Actions run 43698931201](https://github.com/iaac-maai/Group3-day1assignment/actions/runs/43698931201) passed on 15 November 2026. In a fresh Python 3.12 environment it installed `requirements.txt`, passed `pip check`, downloaded both inputs, and executed all **57 code cells** in a new Jupyter kernel without errors. The executed notebook, 21 PNG figures and 18,846-row CSV from that verified run are committed here. The workflow repeats these checks on subsequent pushes and pull requests.
