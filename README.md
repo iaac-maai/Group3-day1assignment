@@ -10,7 +10,7 @@ How do dwelling size, furnishing and neighbourhood relate to advertised rents in
 ## Dataset
 - Source: [Property Rental Listings Dataset](https://www.kaggle.com/datasets/harshalhonde/property-rental-listings-dataset), Harshal H (`harshalhonde`).
 - Raw file: `Mumbai_property_details.csv`, 23,405 rows and 18 columns. One row is an advertised listing, not necessarily a unique dwelling.
-- Data licence: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), as recorded in the team's [Day 2 provenance](https://huggingface.co/iaac-maai/group3-day2-mumbairental/blob/60dd192d80947c79fdae64bff6ce770d3db76b76/README.md). This correction did not independently reverify Kaggle's licence metadata.
+- Data licence: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), verified directly on the [Kaggle data card](https://www.kaggle.com/datasets/harshalhonde/property-rental-listings-dataset) on 15 November 2026. Credit: Harshal H; original listing source: Magicbricks.
 - Modifications: team precleaning, numeric parsing, analytical filtering, category standardization and rent-per-area features.
 
 The notebook downloads missing raw inputs and retrieves the historical precleaned input from fixed revision `ccbcf01c14ee3f0ed8273d6df5cbcd75e405e6a6`, checking its SHA-256. The original precleaning is represented by this input and its audit; it is **not regenerated from raw records**. Subsequent analysis is reproducible from that historical input. First-run downloads require internet access.
@@ -27,7 +27,7 @@ The notebook downloads missing raw inputs and retrieves the historical precleane
 | `LICENSE` | MIT licence for code |
 
 ## How to run
-Use Python 3.11. From the repository root:
+Use Python 3.12. From the repository root:
 
 ```powershell
 python -m venv .venv
@@ -78,7 +78,7 @@ A future target is `Price_num`. Exclude `Price`, `Rent_per_Area` and rent-derive
 | How | The user supplied the issue. The agent inspected GitHub and an unfinished local correction, executed cells sequentially in a fresh Python process, and fixed an undefined furnishing-analysis variable caused by incorrect cell order. |
 | Lessons learned | Saved outputs can conceal execution-order errors. Run from a clean process, export files explicitly and distinguish historical precleaning from reproducible analysis. |
 
-This describes the observed correction workflow. The team should add any tools used during the original assignment and review every decision and interpretation before submission.
+This describes the observed correction workflow. The available record does not establish which additional tools, if any, were used by other contributors during the original assignment; no claim is made about unobserved usage. The team remains responsible for reviewing the decisions and interpretations.
 
 ## License
 Code: [MIT](LICENSE). Data: separately attributed to Harshal H under the provenance above; the code licence does not relicense the dataset.
